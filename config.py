@@ -1,38 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-
-5
-6
-8
-15
-17
-19
-25
-26
-4_7
-
-
-FINAL
 @author: ipcv5
 """
-
-from scipy.misc import toimage, imread, imshow, imsave
-from scipy import ndimage
-from PIL import Image
-from without_textanddashes_withclass import textextraction
-#from binlabeller import bwlabel
-from itertools import product
-import mylib
-import numpy as np
-from getthem import getstrings
-import time
-from actualthinningondrugs import thinning
-from labelstocomps import labels2comps
-from associationsrev import associations
-from stringprops import stringprops
-#from finale import finale
-
-#start_time = time.time()
+IMG_DIR = '../../images_consolidated/'
+OUT_DIR = 'Outs/'
+IMG_EXT = '.png'
 
 #
 #

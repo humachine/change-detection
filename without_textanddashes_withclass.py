@@ -29,7 +29,7 @@ from mylib import show
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.random import normal
-
+from config import *
 
 import time
 start_time = time.time()
@@ -52,23 +52,11 @@ class component:
 
 def textextraction(fname=None):
 #if 1:
-    fname=None
-    print 'No file name assigned'
+    if fname==None:
+        print 'No file name assigned'
+        return 0, time.time()-start_time
     
     if fname==None:
-        imname='images_consolidated\\6_b.png'
-        imname='images_consolidated\\8_a.png'
-        imname='images_consolidated\\15_b.png'
-        imname='images_consolidated\\6_a.png'
-
-        imname='images_consolidated\\8_b.png'
-        imname='images_consolidated\\5_b.png'
-        imname='images_consolidated\\4_3_b.png'
-        imname='images_consolidated\\4_7_a.png'
-        imname='images_consolidated\\4_5_b.png'
-        imname='images_consolidated\\4_6_b.png'
-        imname='images_consolidated\\5_a.png'
-
         i=imname.rfind('\\')
         fname=imname[i+1:]
         fname=fname[:-4]
@@ -225,11 +213,5 @@ def textextraction(fname=None):
     print 'textonly and notext images generated. . '    
     print
 
-textextraction('5_a')
-if __name__ == "__main__":
-#    flist=mylib.pickleload('Outputs\\fnamelist.pkl')
-#    for i in flist:
-#        textextraction(i)
-#        j=i[:-1]+'b'
-#        textextraction(j)
-    print time.time() - start_time, "seconds"
+textextraction()
+#textextraction('5_a')
