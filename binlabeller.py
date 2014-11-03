@@ -167,7 +167,6 @@ def bwlabel(img):
     
 #ccarr is returned instead of labels
     return (ccdict, ccarr, count, output_img)
-import json
 
 def main():
     img = Image.open('images_consolidated\\8_a.png')

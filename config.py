@@ -6,6 +6,15 @@ IMG_DIR = '../../images_consolidated/'
 OUT_DIR = 'Outs/'
 IMG_EXT = '.png'
 
+class textextractioncfg:
+    BORDER=4        #Make border to 0 so that components near border do not create array-boundar errors
+    COMPWIDTH_L=55
+    COMPLEN_L=55
+    DASHEDLEN_U=25
+    DASHEDWIDTH_U=25
+    DOTSWIDTH_L=6
+    DOTSLEN_L=6
+
 #
 #
 #fname='20_a'

@@ -23,16 +23,12 @@ from scipy.misc import toimage, imread, imshow, imsave
 from scipy import ndimage
 from PIL import Image
 from binlabeller import bwlabel
-from itertools import product
-import mylib
 from mylib import show
 import numpy as np
-import matplotlib.pyplot as plt
-from numpy.random import normal
-from config import *
-
 import time
-start_time = time.time()
+
+import mylib
+import config as cfg
 
 """The Component Class
 """
@@ -50,29 +46,37 @@ class component:
 
 #------------------------------------------------------------------------
 
-def textextraction(fname=None):
-#if 1:
+
+def textextraction(fname=None, kvs=[]):
+    start_time = time.time()
+
     if fname==None:
         print 'No file name assigned'
         return 0, time.time()-start_time
-    
-    if fname==None:
-        i=imname.rfind('\\')
-        fname=imname[i+1:]
-        fname=fname[:-4]
     else:
-        imname='images_consolidated\\'+fname+'.png'
+        imname = cfg.IMG_DIR+fname
+    print 'Extracting text from', imname
+    if cfg.IMG_EXT in fname:
+        fname=fname[:-4]
 
-    print imname
-#Opening Images, Preliminaries
+
+    #Initializing all vital constants
+    BORDER=cfg.textextractioncfg.BORDER
+    COMPWIDTH_L=cfg.textextractioncfg.COMPWIDTH_L
+    COMPLEN_L=cfg.textextractioncfg.COMPLEN_L
+    DASHEDLEN_U=cfg.textextractioncfg.DASHEDLEN_U
+    DASHEDWIDTH_U=cfg.textextractioncfg.DASHEDWIDTH_U
+    DOTSWIDTH_L=cfg.textextractioncfg.DOTSWIDTH_L
+    DOTSLEN_L=cfg.textextractioncfg.DOTSLEN_L
+
+#Opening Images and Preliminaries
     pilimg = Image.open(imname)
     pilimg = pilimg.convert('1')
-#    pilimg.save('C:\\SwarunDocs\\im1.png')
 
     newimg=pilimg.copy()
     data=newimg.load()
     pilw, pilh=newimg.size
-    BORDER=4
+    
     for i in range(pilw):
         for j in range(BORDER):
             data[i,j]=255
@@ -91,127 +95,83 @@ def textextraction(fname=None):
 
 
     img=np.asarray(Image.open(imname), dtype=bool)    
-    im1 = np.zeros(img.shape)
     
     img.flags.writeable=True
     height, width = img.shape
 
-       
-
 #==============================================================================
-# 
+#   Image-Text Extraction using 8-connected component labeling
 #==============================================================================
 
 #Label matching
-    (ccdict, _, num, output) = bwlabel(newimg)
-    show(output)
     print 'Finding connected components. . . '
-    print time.time() - start_time, 'seconds'
+    (ccdict, _, num, output) = bwlabel(newimg)  #ccdict has a dictionary containing: ccdict[i] has all the point pairs  (x,y) that belong to component number i
+
+    if ('displayoutputs=True' in kvs):  #If output mode is true, then show intermediate screens, else carry on processing images
+        show(output)
+    
+    print time.time() - start_time, 'seconds taken'
     print num, 'components found . . '
-#    toimage(output).show()
     
     
     data = pilimg.load()
     complen=[]
     compwidth=[]
+    
+    #Finding component dimensions. Complen and compwidth have the pixel 
     for i in range(1,num+1):
-#        print len(ccdict[i])
         ccchoose=i
         if len(ccdict[i])==0:
             ccdict[i]=[(1,1)]
-#            del ccdict[i]
-#            num-=1
-#            complen.append(1)
-#            compwidth.append(1)
-#            continue
+
         aa=ccdict[ccchoose]
         c, d = zip(*aa)
         
-        compmax=max(ccdict[ccchoose])
-        compmin=min(ccdict[ccchoose])
-        
-       
         complen.append(max(c)-min(c)+1)
         compwidth.append(max(d)-min(d)+1)
 
-#Vital Constants- EDITABLE        
-    COMPWIDTH_L=55
-    COMPLEN_L=55
-    DASHEDLEN_U=25
-    DASHEDWIDTH_U=25
-    DOTSWIDTH_L=6
-    DOTSLEN_L=6
-
-
-#==============================================================================
-#     for i in range(1,num+1):
-#         ar=float((complen[i-1]*compwidth[i-1]) / len(ccdict[i]) )
-#         if complen[i-1] < COMPLEN_L and compwidth[i-1]< COMPWIDTH_L : 
-#             if ar>1:
-#                 for j in ccdict[i]:
-#                     
-#                     a,b=j
-#                     img[b,a]=False
-#                 ccdict[i]=[]
-#                 
-#             if ar==1.0:
-#                 if (complen[i-1]>DASHEDLEN_U or compwidth[i-1]>DASHEDWIDTH_U):
-#                     for j in ccdict[i]:
-#                         
-#                         a,b=j
-#                         img[b,a]=False
-#                     ccdict[i]=[]
-#                 if (complen[i-1]<DOTSLEN_L and compwidth[i-1]<DOTSWIDTH_L):
-#                     for j in ccdict[i]:
-#                         
-#                         a,b=j
-#                         img[b,a]=False
-#                     ccdict[i]=[]
-#     toimage(img).show()    
-#==============================================================================
-    
     textcomplist=[]    
+
+#ar refers to the pixel density of the component being considered. ar=1.0 denotes a completely shaded rectangle
     for i in range(1,num+1):
-        ar=float((complen[i-1]*compwidth[i-1]) / len(ccdict[i]) )
-        if complen[i-1] < COMPLEN_L and compwidth[i-1]< COMPWIDTH_L : 
-            if ar>1:
+        ar=float((complen[i-1]*compwidth[i-1]) / len(ccdict[i]) )   #Complen * Compwidth = Area of component; Len(ccdict) = Number of points in component
+        if complen[i-1] < COMPLEN_L and compwidth[i-1]< COMPWIDTH_L : #If the component lengths and widths are not within the thresholds, the component is not considered to be that of text
+            if ar>1:    #If ar>1, it's not a dashed line or a dot and is hence added to textcomplist
                 textcomplist.append(i)
-#                ccdict[i]=[]
                 
-            elif ar==1.0:
+            elif ar==1.0:   #ar==1.0 means that it's either a dashed line or a dot. Both cases are dealt with below
                 if (complen[i-1]>DASHEDLEN_U or compwidth[i-1]>DASHEDWIDTH_U):
-                    textcomplist.append(i)
-#                    ccdict[i]=[]
+                    textcomplist.append(i) 
                 if (complen[i-1]<DOTSLEN_L and compwidth[i-1]<DOTSWIDTH_L):
                     textcomplist.append(i)
-#                    ccdict[i]=[]
     print
     print 'Extracting Text . . .'
     
-    mylib.picklethis(ccdict, 'ccdict'+fname)
-    mylib.picklethis(textcomplist, 'textcomplist'+fname)    
-    mylib.picklethis(num, 'ccnum'+fname)
+    #Pickles all the data and saves it to separate files
+    mylib.picklethis(ccdict, cfg.OUT_DIR+'ccdict'+fname)
+    mylib.picklethis(textcomplist, cfg.OUT_DIR+'textcomplist'+fname)    
+    mylib.picklethis(num, cfg.OUT_DIR+'ccnum'+fname)
     
 
-        
+    print 'Separating Text and Graphics. . .'
+    #The below loop removes all the components that are not text giving us the TEXTONLY image
     for i in range(1, num+1):
         if i not in textcomplist:
             for j in ccdict[i]:
                 a,b=j
                 img[b,a]=False
             ccdict[i]=[]
-    print 'Separating Text and Graphics. . .'
 
 
-    imsave('Outputs\\textonly' + fname + '.png',img)
-#    show(img)    
+    imsave(cfg.OUT_DIR+'textonly' + fname + cfg.IMG_EXT,img)
     img=img.astype(bool)
     img1=np.asarray(imread(imname), dtype=bool)
     img2=np.subtract(img, img1)
-    imsave('Outputs\\notext' +fname+'.png', img2)
+    imsave(cfg.OUT_DIR+'notext' + fname+cfg.IMG_EXT, img2)
     
-    print 'textonly and notext images generated. . '    
+    print 'Text_only and No_text images generated. . '    
     print
+    print time.time() - start_time, 'seconds taken'
+    return 0, time.time()-start_time
 
-textextraction()
-#textextraction('5_a')
+#textextraction('5_a.png')
