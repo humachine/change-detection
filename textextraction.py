@@ -45,7 +45,8 @@ class component:
         return str(self.category)
 
 #------------------------------------------------------------------------
-
+'''Main Textextraction Routine
+'''
 
 def textextraction(fname=None, kvs=[]):
     start_time = time.time()
@@ -58,7 +59,6 @@ def textextraction(fname=None, kvs=[]):
     print 'Extracting text from', imname
     if cfg.IMG_EXT in fname:
         fname=fname[:-4]
-
 
     #Initializing all vital constants
     BORDER=cfg.textextractioncfg.BORDER

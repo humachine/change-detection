@@ -15,19 +15,13 @@ Created on Wed Feb 19 10:15:03 2014
 @author: ipcv5
 """
 from operator import itemgetter, attrgetter
-import pickle
 from scipy import ndimage
 from scipy.misc import imread, imsave, imshow, toimage
 from PIL import Image
 import numpy as np
 import time
-import random
 import cPickle as pickle
 from mylib import picklethis, pickleload, show
-import pytesser 
-
-
-
 
 class component:
     def __init__(self, ul0, ul1, lr0, lr1, ccdictno, width=None, height=None, direction=None, top=None, bottom=None):
@@ -319,21 +313,6 @@ if 1:
         pickle.dump(vstrings, a)
         a.close()
 
-
-
-
-#==============================================================================
-    
-#flist=pickleload('Outputs\\fnamelist')
-#for i in flist[::-1]:
-#
-#    print i
-#    func(i)
-#
-#    j=i[:-1]+'b'
-#    print j
-#    func(j)
-#        
 
 print time.time() - starttime, "seconds"
 
