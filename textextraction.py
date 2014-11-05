@@ -110,8 +110,7 @@ def textextraction(fname=None, kvs=[]):
     if ('displayoutputs=True' in kvs):  #If output mode is true, then show intermediate screens, else carry on processing images
         show(output)
     
-    print time.time() - start_time, 'seconds taken'
-    print num, 'components found . . '
+    print time.time() - start_time, 'seconds taken to find', num, 'components. . '
     
     
     data = pilimg.load()
@@ -144,7 +143,6 @@ def textextraction(fname=None, kvs=[]):
                     textcomplist.append(i) 
                 if (complen[i-1]<DOTSLEN_L and compwidth[i-1]<DOTSWIDTH_L):
                     textcomplist.append(i)
-    print
     print 'Extracting Text . . .'
     
     #Pickles all the data and saves it to separate files
@@ -170,8 +168,6 @@ def textextraction(fname=None, kvs=[]):
     imsave(cfg.OUT_DIR+'notext' + fname+cfg.IMG_EXT, img2)
     
     print 'Text_only and No_text images generated. . '    
-    print
-    print time.time() - start_time, 'seconds taken'
     return 0, time.time()-start_time
 
 #textextraction('5_a.png')

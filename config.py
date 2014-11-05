@@ -15,6 +15,14 @@ class textextractioncfg:
     DOTSWIDTH_L=6
     DOTSLEN_L=6
 
+class stringify:
+    MINTEXTAREA=20
+    STRINGIFY_DIR='GetStrings/'
+    DILMASK=30
+    TOLERANCE= 16
+    GAP=52
+    TOL=0
+
 #
 #
 #fname='20_a'
