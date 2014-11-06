@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """
+NO OVERLAP of stringmask and segmentmask
+
 DENSITY = 0.05
 Created on Fri Apr 04 15:43:57 2014
 
@@ -73,11 +75,12 @@ if 1:
         fname='4_6_a'
         fname='17_a'
         fname='7_5_b'
+        fname='3_a'
 
     #Vital Constants
     TEXTBOX_DENSITY=0.05
     print fname    
-    fill1=np.asarray(imread('Outputs\\Restart\\Forsir\\'+fname+'.png'), dtype=bool)
+    fill1=np.asarray(imread('Outputs\\Restart\\Forsir1\\'+fname+'.png'), dtype=bool)
     imgoriginal=np.asarray(imread('Outputs\\stringmask'+fname+'.png'), dtype=bool)
     img=imgoriginal.copy()
     original=np.asarray(imread('images_consolidated\\'+fname+'.png'), dtype=bool)

@@ -117,8 +117,13 @@ def plot_matches(im1,im2,locs1,locs2,matchscores):
     pylab.imshow(im3)
     
     cols1 = im1.shape[1]
+    count=0
+    print cols1
     for i in range(len(matchscores)):
         if matchscores[i] > 0:
+            count+=1
             pylab.plot([locs1[i,1], locs2[int(matchscores[i]),1]+cols1], [locs1[i,0], locs2[int(matchscores[i]),0]], 'c')
     pylab.axis('off')
     pylab.show()
+    return count
+    

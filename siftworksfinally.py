@@ -90,24 +90,15 @@ def match(imname1, imname2):
     dist=10
     skp, tkp, totalkp, noofkpmatched = findKeyPoints(img, temp, dist)
     newimg = drawKeyPoints(img, temp, skp, tkp, num)
-#    toimage(newimg).show()
-#    cv2.imshow("image", newimg)
-#    cv2.waitKey(0)
+    toimage(newimg).show()
+    cv2.imshow("image", newimg)
+    cv2.waitKey(0)
     return totalkp, noofkpmatched
     
 if __name__ == "__main__":
-    imname1='barca.jpg'
-    imname2='boot.jpg'
+    imname1='notext5_a.png'
+    imname2='notext5_a.png'
     
-    imname1='ETC\\ModHausdorffDist\\nf\\1.png'
-#    imname2='ETC\\ModHausdorffDist\\sift2.png'
-    imname2='ETC\\ModHausdorffDist\\nf\\2.png'
-#    imname2='boot.jpg'
-    for i in range(1, 6):
-        for j in range(1, 6):
-            imname1='ETC\\ModHausdorffDist\\'+str(i)+'.png'
-            imname1='ETC\\ModHausdorffDist\\'+str(j)+'.png'
-            
-            total, noofmatches=match(imname1, imname2)
-            print i, j, ':', total, noofmatches
+    total, noofmatches=match(imname1, imname2)
+    print total, noofmatches
     print time.time() - start_time, "seconds"

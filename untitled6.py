@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 """
+- Takes Filled segments (often with labeling lines attached)
+- Breaks labeling lines
+- Now, analyzes segments based on size. Decides threshold. Removes the rest
+
 THRESH=10000
 ForSir - FIRST attempt at Thinning and getting segment masks
 Created on Wed Apr 02 16:14:46 2014
@@ -35,23 +39,25 @@ starttime=time.time()
 if 1:
     fname=None
     if fname==None:
-        fname='14_a'
-        fname='9_a'
-        fname='6_a'
-        fname='15_a'
         fname='9_b'
         fname='7_a'
         fname='5_a'
         fname='16_a'
-        fname='5_a'
-        fname='8_a'
         fname='9_a'
         fname='10_a'
         fname='20_a'
         fname='26_b'
+        fname='8_a'
+        fname='9_a'
+        fname='25_a'
+        fname='14_a'
+        fname='6_a'
+        fname='3_a'
+        fname='5_a'
 
     print fname    
     fill2=np.asarray(imread('Outputs\\Restart\\'+fname+'tempfill'+'.png'), dtype=bool)
+#    fill2=np.asarray(imread('Outputs\\Restart\\idunno\\'+fname+'tempfill'+'.png'), dtype=bool)
 
     print np.sum(fill2)
     print 'start'    
@@ -60,6 +66,7 @@ if 1:
     
     loc=np.where((ans<2) & (ans>0))
 
+    show(ans)
     
     fill2copy=fill2.copy()
     fill2copy[loc]=0
@@ -75,21 +82,29 @@ if 1:
     sortedtemp=sorted(temp, reverse=True)
     sortedtemp.remove(sortedtemp[0])    
     
+    print sortedtemp    
 
+    thresh=10000
     for index in range(len(sortedtemp)-1):
         now=sortedtemp[index]
         nxt=sortedtemp[index+1]
-        if now - nxt < 200:
-            thresh=now
+        print now, nxt
+        if now > 5000 and now < 10000:
+            if now > nxt*5:
+                thresh=now-1
+                break
+        if now<5000:
             break
+        
+    print thresh
     
-    thresh=10000
     for index, i in enumerate(temp):
         if i <= thresh:
             curr[ccarr==index]=0
 
     imsave('Outputs\\Restart\\Forsir1\\'+fname+'.png', curr)
-    show(curr)
+#    imsave('Outputs\\Restart\\idunno\\Fills\\'+fname+'.png', curr)
+#    show(curr)
         
 
 
@@ -100,7 +115,7 @@ if 1:
 #    j=i[:-1]+'b'
 ##    print j
 #    superb(j)
-
+#
 #lis=pickleload('Outputs\\fnamelist')
 #for i in lis[::-1]:
 #    print i

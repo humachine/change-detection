@@ -23,6 +23,9 @@ class stringify:
     GAP=52
     TOL=0
 
+class thinning:
+    SKEL_IMG_DIR='Skeletons/'
+    THINNING_DIR='Thinning/'
 #
 #
 #fname='20_a'

@@ -1,22 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Feb 12 10:14:58 2014
-Updates:
-
-Progress thus far:
-
-- Text and Graphics
-`    Text extraction                             
-`    Removing labeling lines, dashed lines, etc 
-`    Grouping characters to strings
-Segmentation and Matching
-`    Segmentation
-    Matching segments
-Association of labels with segments
-    Attaching labeling lines to segments
-    Associating labels with segments
-Image Comparison
-
 @author: ipcv5
     """
 from scipy.misc import toimage, imread, imshow, imsave
@@ -44,7 +28,6 @@ class component:
     def __repr__(self):
         return str(self.category)
 
-#------------------------------------------------------------------------
 '''Main Textextraction Routine
 '''
 
@@ -109,9 +92,7 @@ def textextraction(fname=None, kvs=[]):
 
     if ('displayoutputs=True' in kvs):  #If output mode is true, then show intermediate screens, else carry on processing images
         show(output)
-    
     print time.time() - start_time, 'seconds taken to find', num, 'components. . '
-    
     
     data = pilimg.load()
     complen=[]

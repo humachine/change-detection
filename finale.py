@@ -110,7 +110,7 @@ def process(string):
 
 
 
-def finale(fname=None):
+ def finale(fname=None):
     if fname==None:
         fname='6_b'
         fname='15_b'
