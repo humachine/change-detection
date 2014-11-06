@@ -13,7 +13,7 @@ start_time = time.time()
 
 
 def main():
-    fname='8_b.png'
+    fname='14_a.png'
 
     res, tim = textextraction(fname)
     res,tim=1,0
