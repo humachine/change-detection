@@ -7,7 +7,7 @@ OUT_DIR = 'Outs/'
 IMG_EXT = '.png'
 
 class textextractioncfg:
-    BORDER=4        #Make border to 0 so that components near border do not create array-boundar errors
+    BORDER=4        #Make border to 0 so that components near border do not create array-boundary errors
     COMPWIDTH_L=55
     COMPLEN_L=55
     DASHEDLEN_U=25
@@ -26,81 +26,25 @@ class stringify:
 class thinning:
     SKEL_IMG_DIR='Skeletons/'
     THINNING_DIR='Thinning/'
-#
-#
-#fname='20_a'
-#
-#flist=[]
-#
-#fname='8_b'
-#flist.append(fname)
-#fname='8_a'
-#flist.append(fname)
-#fname='6_a'
-#flist.append(fname)
-#fname='5_a'
-#flist.append(fname)
-#fname='15_a'
-#flist.append(fname)
-#
-#
-#def drive(fname):
-#    if 0>textextraction(fname):
-#        return 
-#    print 'textextraction done'
-#    getstrings(fname)
-#    print 'getstrings done'
-#    thinning(fname)
-#    print 'thinning done'
-#    #
-#    labels2comps(fname, True)
-##    labels2comps(fname, False)
-#    
-#    print 'label2comps (MEGAFILL) done'
-#    ##
-#    #
-#    associations(fname)
-#    print 'assoc done'
-#    stringprops(fname)
-#    print 'stringprops done'
-#    
-#    
-#    if fname[-1]=='a':
-#        fname=fname[:-1]+'b'
-#    else:
-#        fname=fname[:-1]+'a'
-#    textextraction(fname)
-#    print 'textextraction done1'
-#    getstrings(fname)
-#    print 'getstrings done1'
-#    thinning(fname)
-#    print 'thinning done1'
-#    #
-#    labels2comps(fname, True)
-##    labels2comps(fname, False)
-#    
-#    print 'label2comps (MEGAFILL) done1'
-#    ##
-#    #
-#    associations(fname)
-#    print 'assoc done1'
-#    stringprops(fname)
-#    print 'stringprops done1'
-#    
-#    
-#    
-#    #
-#    if fname[-1]=='b':
-#        fname=fname[:-1]+'a'
-#    finale(fname)
-#    print 'Phew!'
-#    #
-#    #    
-#    #StringProps - String Properties, Euler number, Text Extraction . . . 
-#    #Finale - Result Generation
-#    
-##for i in flist: 
-##    drive(i)
-#
-#drive('8_a')
-#print time.time() - start_time, 'seconds'
+
+class removelines:
+    FILL_IMG_DIR='../../Outputs/Restart/'
+    FILL_IMG_NAME='tempfill'
+    '''Below constants are empirical. Play around as is necessary'''
+    STARTING_THRESH=10000
+    CHECK_ZONE_LOWER=5000
+    CHECK_ZONE_UPPER=1000
+    SEG_VS_NON_SEG_FACTOR=5
+    SAVE_DIR='Segments/Intermediates/'
+    
+class segmentation:
+    TEXTBOX_DENSITY=0.05    #Refers to the density of text pixels in a shaded textbox i.e No of text pixels / Total pixels of a shaded textbox > 0.05
+    OUT_DIR='Segments/'
+    DEBUG_DIR='Segments/Debug/'
+
+class labeltosegment:
+    OUT_DIR = 'LabelToSegment/'
+    GREY_DIL_SIZE=(50,50)
+    STD_DIL_SIZE=(3,3)
+    SKEL_DIL_SIZE=(5,5)
+    

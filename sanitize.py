@@ -15,23 +15,10 @@ FINAL
 from scipy.misc import toimage, imread, imshow, imsave
 from scipy import ndimage
 from PIL import Image
-#from binlabelwithdict import bwlabel
-from binlabeller import bwlabel
-from itertools import product
 import mylib
-from mylib import show
 import numpy as np
-import matplotlib.pyplot as plt
-from numpy.random import normal
 import time
 
-from without_textanddashes_withclass import textextraction
-from actualthinningondrugs import thinning
-from getthem import getstrings
-from labelstocomps import labels2comps
-from associationsrev import associations
-from stringprops import stringprops
-from finale import finale
 start_time = time.time()
 
 

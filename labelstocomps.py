@@ -6,24 +6,7 @@ Created on Thu Feb 27 14:27:43 2014
 @author: ipcv5
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 25 15:50:45 2014
-
-@author: Home
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Feb 23 02:30:41 2014
-
-@author: Home
-"""
-
-import numpy as np
-
 from PIL import Image	
-import cv2
 import mylib
 from mylib import pickleload, picklethis, show
 import numpy as np
@@ -31,7 +14,7 @@ from scipy.misc import imread, imsave, imshow, toimage
 from binlabeller import bwlabel
 from scipy import ndimage
 import time
-from binlabeller import bwlabel
+import config as cfg
 
 def whichcomp(a, b, ccdict, ccnum, ccarr=None):
     if ccarr==None:
@@ -42,6 +25,9 @@ def whichcomp(a, b, ccdict, ccnum, ccarr=None):
     else:
         return ccarr[a,b]
 
+'''
+Certain images are inherently on a black background instead of the default white background. 
+This function (and the one below it) inverts such images based on black pixel density.'''
 def towhitebgd(numarr):
     a=np.sum(numarr)
     height, width=numarr.shape
@@ -49,7 +35,6 @@ def towhitebgd(numarr):
         return numarr
     else:
         return np.invert(numarr)
-
 
 def toblackbgd(numarr):
     a=np.sum(numarr)
@@ -59,6 +44,7 @@ def toblackbgd(numarr):
     else:
         return np.invert(numarr)
 
+'''Given a list of components and the points comprising each component it generates an image'''
 def genimage(img, ccdict, complist):
     for i in complist:
         for j in ccdict[i]:
@@ -66,7 +52,6 @@ def genimage(img, ccdict, complist):
             img[a,b]=True
     return img
 
-starttime = time.time() 
 
 def associate(ccnum, ccdict, textcomplist, bigdict, bigcount, bigarr, start=100):
         assoclist = [0]
@@ -83,42 +68,25 @@ def associate(ccnum, ccdict, textcomplist, bigdict, bigcount, bigarr, start=100)
                         assoclist.append(ans)
                         appendflag=False
                         break
-    #==============================================================================
-    #             else:
-    #                 zip1=zip(*ccdict[i])
-    #                 ul0=min(zip1[0])
-    #                 lr0=max(zip1[0])
-    #                 ul1=min(zip1[1])
-    #                 lr1=max(zip1[1])
-    #                 
-    #                 MASKWIDTH=1
-    #                 finalans=0
-    #                 while (np.max(finalans) ==0):
-    #                     finalans=strmask[ul0-MASKWIDTH:lr0+MASKWIDTH+1, ul1-MASKWIDTH:lr1+MASKWIDTH+1]*allseg[ul0-MASKWIDTH:lr0+MASKWIDTH+1, ul1-MASKWIDTH:lr1+MASKWIDTH+1]
-    #                     MASKWIDTH+=1
-    #                 print np.max(finalans)
-    #                 stringbelongsto=np.max(finalans)
-    #                 images[stringbelongsto-1][ul0:lr0+1, ul1:lr1+11]=imgoriginal[ul0:lr0+1, ul1:lr1+11]
-    #==============================================================================
-    
+                    
                 if appendflag==True:
                     assoclist.append(0)
         return assoclist
     
+import os
+os.chdir('../../')
+    
 
+starttime = time.time() 
 def labels2comps(fname=None, flag=True):
     if fname==None:
-        fname='6_a'
-        fname='5_b'
-        fname='8_a'
-        fname='15_b'
-        
-        fname='6_b'
-        fname='5_a'
-        
-        fname='15_a'
-        fname='8_b'
-        
+        print 'No file name assigned'
+#        return 0, time.time()-starttime
+
+#    imname = cfg.IMG_DIR+fname
+    fname='5_a.png'
+    if cfg.IMG_EXT in fname:
+        fname=fname[:-4]
         
     imname = 'Outputs\\labelinglinesremoved'+fname+'.png'
     
@@ -143,7 +111,6 @@ def labels2comps(fname=None, flag=True):
         imsave('Outputs\\megafill'+fname+'.png', img2)
     
     bigdil=np.asarray(imread('Outputs\\megafill'+fname+'.png'), dtype=bool).astype(np.int8)
-    newarr=np.asarray(imread('images_consolidated\\'+fname+'.png'), dtype=bool).astype(np.int8)
     print time.time() - starttime, ' bigdilate'
     
     imsave('tempfill.png', np.invert(bigdil))
@@ -169,8 +136,9 @@ def labels2comps(fname=None, flag=True):
                 a,b=j
                 colorimg[b,a]=(col*255)/noofsegments
     
-    #show(colorimg)
+    show(colorimg)
+    return colorimg
 #
 if __name__ == "__main__":
-    labels2comps()
+    img=labels2comps()
     print time.time() - starttime, "seconds"
