@@ -8,6 +8,7 @@ from Stringify import stringify
 from Thinning import thinning
 from RemoveLines import removelines
 from Segmentation import segmentation
+from LabelToSegment import labeltosegment
 import time
 
 import config as cfg
@@ -54,7 +55,7 @@ def main():
         print 'Removed all the labeling lines in', tim, 'seconds. . . \n\n'
 
 
-    '''Segmentation of Image - Stage 1'''
+    '''Segmentation of Image'''
     res, tim = segmentation(fname)
 #    res,tim=1,0
     if 0 > res:
@@ -63,6 +64,18 @@ def main():
     else:
         print 'Image segmentation completed in', tim, 'seconds. . . \n\n'
     return 0
+
+
+    '''Attaching Labels to Segments'''
+    res, tim = labeltosegment(fname)
+#    res,tim=1,0
+    if 0 > res:
+        print 'Attaching labels to segments failed'
+        return -1 
+    else:
+        print 'Attaching labels to segments completed in', tim, 'seconds. . . \n\n'
+    return 0
+
 
 if __name__ == "__main__":
     result=main()

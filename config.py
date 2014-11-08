@@ -2,6 +2,10 @@
 """
 @author: ipcv5
 """
+import sys
+import os
+import numpy as np
+
 IMG_DIR = '../../images_consolidated/'
 OUT_DIR = 'Outs/'
 IMG_EXT = '.png'
@@ -47,4 +51,11 @@ class labeltosegment:
     GREY_DIL_SIZE=(50,50)
     STD_DIL_SIZE=(3,3)
     SKEL_DIL_SIZE=(5,5)
-    
+    HOR_ELEMENT=np.array([[False, False, False], [True, True, True], [False, False, False]])
+    VERT_ELEMENT=np.array([[False, True, False], [False, True, False], [False, True, False]])
+    COMP_MIN_SIZE=100
+
+    BIG_ELEMENT_SIZE=35
+    bigelement=np.zeros((BIG_ELEMENT_SIZE, BIG_ELEMENT_SIZE), dtype=bool)
+    bigelement[(BIG_ELEMENT_SIZE-1)/2, :]=True
+
