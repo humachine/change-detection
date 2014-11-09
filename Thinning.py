@@ -85,9 +85,7 @@ def thinning(fname=None):
     y=z
     y[y<0]=0
     z=y.copy().astype(bool)
-    fill2=fill(z)
    
-   #FIXME -  Remove one of the below two save images. Most likely 'fill'. 'Tempfill' seems to do a good job.
     imsave(cfg.OUT_DIR + cfg.thinning.THINNING_DIR + fname+'tempfill'+'.png', fill1)
     return 0, time.time()-starttime
        

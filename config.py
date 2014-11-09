@@ -7,8 +7,12 @@ import os
 import numpy as np
 
 IMG_DIR = '../../images_consolidated/'
-OUT_DIR = 'Outs/'
+OUT_DIR = 'Outs1/'
 IMG_EXT = '.png'
+
+class sanitize:
+    DENS_LOW=0.4
+    DENS_HIGH=2
 
 class textextractioncfg:
     BORDER=4        #Make border to 0 so that components near border do not create array-boundary errors
@@ -32,7 +36,8 @@ class thinning:
     THINNING_DIR='Thinning/'
 
 class removelines:
-    FILL_IMG_DIR='../../Outputs/Restart/'
+    FILL_IMG_DIR='RemoveLines/'
+#    FILL_IMG_DIR='../../Outputs/Restart/'
     FILL_IMG_NAME='tempfill'
     '''Below constants are empirical. Play around as is necessary'''
     STARTING_THRESH=10000
@@ -58,4 +63,3 @@ class labeltosegment:
     BIG_ELEMENT_SIZE=35
     bigelement=np.zeros((BIG_ELEMENT_SIZE, BIG_ELEMENT_SIZE), dtype=bool)
     bigelement[(BIG_ELEMENT_SIZE-1)/2, :]=True
-

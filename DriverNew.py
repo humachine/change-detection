@@ -2,7 +2,7 @@
 """
 @author: ipcv5
 """
-
+from Sanitize import sanitize
 from TextExtraction import textextraction
 from Stringify import stringify
 from Thinning import thinning
@@ -12,10 +12,17 @@ from LabelToSegment import labeltosegment
 import time
 
 import config as cfg
+
 start_time = time.time()
 
 def main():
     fname='14_a.png'
+    
+    '''Sanitization'''    
+    fname1=fname
+    fname1=fname[:-5]+ ['a','b'][fname[-5]=='a']  +fname[-4:]
+    if not sanitize(fname, fname1):
+        return -1
 
     '''Text Extraction'''
     res, tim = textextraction(fname)

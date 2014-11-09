@@ -14,42 +14,31 @@ FINAL
 
 from scipy.misc import toimage, imread, imshow, imsave
 from scipy import ndimage
-from PIL import Image
-import mylib
 import numpy as np
-import time
-
-start_time = time.time()
+import config as cfg
 
 
-def sanitized(fname, fname1):
-    
+'''Tries to sanitize image. All images which do not resemble a drawing (like a fully black image etc) are rejected
+'''
+def sanitize(fname, fname1):
     try:
-        a=np.asarray(imread('images_consolidated\\'+fname+'.png'), dtype=bool)
-        b=np.asarray(imread('images_consolidated\\'+fname1+'.png'), dtype=bool)
+        a=np.asarray(imread(cfg.IMG_DIR + fname), dtype=bool)
+        b=np.asarray(imread(cfg.IMG_DIR + fname1), dtype=bool)
         
-#        print np.sum(a), np.sum(b)
+        DENS_LOW=cfg.sanitize.DENS_LOW
+        DENS_HIGH=cfg.sanitize.DENS_HIGH
+        
         ratio = float(np.sum(a))/float(np.sum(b))
-#        print type(ratio), ratio
-        if  ratio < 0.4 or ratio >= 2:
+        if  ratio < DENS_LOW or ratio >= DENS_HIGH:
             return False
             
         _, num1=ndimage.label(a, np.ones((3,3)))
         _, num2=ndimage.label(b, np.ones((3,3)))
         ratio1=float(num1)/float(num2)
-#        print ratio1, num1, num2
         
-        if ratio1 < 0.4 or ratio1>=2:
+        if ratio1 < DENS_LOW or ratio1>=DENS_HIGH:
             return False
         return True
             
     except IOError:
         return False
-        
-    return False
-
-fname='8_a'
-fname1='8_e'
-
-
-#print time.time() - start_time, 'seconds'
