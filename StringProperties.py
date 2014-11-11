@@ -27,15 +27,9 @@ from mylib import pickleload, picklethis, show, pickle
 import numpy as np
 from scipy.misc import imread, imsave, imshow, toimage
 from scipy import ndimage
-#import time
-#starttime = time.time() 
-
-#import os
-#os.chdir('../../')
-#
-
 import cv2.cv as cv
 import tesseract
+import time
 
 api = tesseract.TessBaseAPI()
 api.Init(".","eng",tesseract.OEM_DEFAULT)
@@ -52,8 +46,9 @@ def conv(fname):
 
 fname=None
 import config as cfg
-def stringprops(fname=None):
+def stringproperties(fname=None):
 #if 1:
+    starttime=time.time()
     if fname==None:
         fname='6_b'
         fname='15_a'
@@ -66,21 +61,24 @@ def stringprops(fname=None):
     if cfg.IMG_EXT in fname:
         fname=fname[:-4]        
         
-    SAVE_DIR=cfg.OUT_DIR+'PGM/New/'
+    SAVE_DIR=cfg.OUT_DIR+cfg.properties.OUT_DIR
     strmaskhor=np.asarray(imread(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR+fname+'hor.png'), dtype=bool)
     strmaskvert=np.asarray(imread(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR+fname+'vert.png'), dtype=bool)
     originalimage=np.asarray(imread(cfg.IMG_DIR+fname+'.png'), dtype=bool)
 
     print 'Character Recognition begins.. .' 
-    '''Horizontal Strings'''
+    
+    '''Takes up Horizontal Strings. Saves each string to a separate image and runs the OCR engine on it.
+    The OCR output(horstr), the string centroid(centr) and the string bounding box boundaries(slia) are saved.    
+    '''
     label_im, num = ndimage.label(strmaskhor)
     slices = ndimage.find_objects(label_im)
     centroids=ndimage.measurements.center_of_mass(strmaskhor, label_im, xrange(1, num+1))
-#    centroids = [(int(x), int(y)) for (x,y) in centroids]    
 
     confidence = []
     horstr=[]
     centr=[]
+    sli=[]
     cnt=0
     for i, sl in enumerate(slices):
         if (np.sum(strmaskvert[sl]*strmaskhor[sl]) == np.sum(strmaskhor[sl])):
@@ -89,17 +87,19 @@ def stringprops(fname=None):
         b=np.lib.pad(b, (50,50), 'constant')
         imsave(SAVE_DIR+fname+ str(cnt) + '.png', np.flipud(np.fliplr(b)) )
         text, conf = conv(SAVE_DIR+fname+ str(cnt) + '.png')
+        if text=='':
+            continue
         
         cnt+=1
         confidence.append(conf)
         centr.append(centroids[i])
         horstr.append(text)
+        sli.append(sl)
 
-    '''Vertical Strings'''        
+    '''A similar process is done for Vertical Strings'''        
     label_im, num = ndimage.label(strmaskvert)
     slices = ndimage.find_objects(label_im)
     centroids=ndimage.measurements.center_of_mass(strmaskvert, label_im, xrange(1, num+1))
-#    centroids = [(int(x), int(y)) for (x,y) in centroids]    
     
     vertstr=[]
     for i, sl in enumerate(slices):
@@ -110,16 +110,20 @@ def stringprops(fname=None):
         imsave(SAVE_DIR+fname+ str(cnt) + '.png', np.rot90(b,-1))
 
         text, conf = conv(SAVE_DIR+fname+ str(cnt) + '.png')
+        if text=='':
+            continue
 
         confidence.append(conf)
         vertstr.append(text)
         centr.append(centroids[i])
+        sli.append(sl)
         cnt+=1
         
     print 'OCR completed with a percentage confidence of', np.mean(confidence)
     
+    picklethis(sli,  SAVE_DIR + fname + 'slices.pkl')
     picklethis(centr,  SAVE_DIR + fname + 'centroids.pkl')
     picklethis(horstr, SAVE_DIR + fname + 'hor.pkl')
     picklethis(vertstr, SAVE_DIR + fname + 'vert.pkl')
-
-stringprops('6_a.png')
+    
+    return 0, time.time()-starttime

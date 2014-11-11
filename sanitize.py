@@ -21,6 +21,7 @@ import config as cfg
 '''Tries to sanitize image. All images which do not resemble a drawing (like a fully black image etc) are rejected
 '''
 def sanitize(fname, fname1):
+    return True
     try:
         a=np.asarray(imread(cfg.IMG_DIR + fname), dtype=bool)
         b=np.asarray(imread(cfg.IMG_DIR + fname1), dtype=bool)
@@ -28,6 +29,7 @@ def sanitize(fname, fname1):
         DENS_LOW=cfg.sanitize.DENS_LOW
         DENS_HIGH=cfg.sanitize.DENS_HIGH
         
+        print DENS_LOW, DENS_HIGH
         ratio = float(np.sum(a))/float(np.sum(b))
         if  ratio < DENS_LOW or ratio >= DENS_HIGH:
             return False

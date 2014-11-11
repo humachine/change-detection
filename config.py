@@ -7,8 +7,9 @@ import os
 import numpy as np
 
 IMG_DIR = '../../images_consolidated/'
-OUT_DIR = 'Outs/'
+OUT_DIR = 'Outs1/'
 IMG_EXT = '.png'
+RES_DIR = 'Results/'
 
 class sanitize:
     DENS_LOW=0.4
@@ -63,3 +64,6 @@ class labeltosegment:
     BIG_ELEMENT_SIZE=35
     bigelement=np.zeros((BIG_ELEMENT_SIZE, BIG_ELEMENT_SIZE), dtype=bool)
     bigelement[(BIG_ELEMENT_SIZE-1)/2, :]=True
+    
+class properties:
+    OUT_DIR='StringProperties/'

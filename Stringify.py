@@ -236,4 +236,3 @@ def stringify(fname=None, kvs=[]):
 
     return 0, time.time() - starttime
 
-stringify('5_a.png')

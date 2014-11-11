@@ -2,6 +2,7 @@
 """
 @author: ipcv5
 """
+from Setup import setup
 from Sanitize import sanitize
 from TextExtraction import textextraction
 from Stringify import stringify
@@ -9,21 +10,16 @@ from Thinning import thinning
 from RemoveLines import removelines
 from Segmentation import segmentation
 from LabelToSegment import labeltosegment
-import time
+from StringProperties import stringproperties
+from LabelMatching import labelmatching
 
+import time
 import config as cfg
 
 start_time = time.time()
 
-def main():
-    fname='14_a.png'
-    
-    '''Sanitization'''    
-    fname1=fname
-    fname1=fname[:-5]+ ['a','b'][fname[-5]=='a']  +fname[-4:]
-    if not sanitize(fname, fname1):
-        return -1
 
+def drive(fname):
     '''Text Extraction'''
     res, tim = textextraction(fname)
     res,tim=1,0
@@ -83,6 +79,47 @@ def main():
         print 'Attaching labels to segments completed in', tim, 'seconds. . . \n\n'
     return 0
 
+
+    '''Calculating String Properties'''
+    res, tim = stringproperties(fname)
+#    res,tim=1,0
+    if 0 > res:
+        print 'OCR Failed'
+        return -1 
+    else:
+        print 'OCR Engine recognition completed in', tim, 'seconds. . . \n\n'
+    return 0
+
+
+def main():
+    print 'Creating Directories. . .'
+    print 'Preparing Environment. . .'
+    setup()
+    
+    fname='5_a.png'
+    
+    '''Sanitization'''    
+    fname1=fname
+    fname1=fname[:-5]+ ['a','b'][fname[-5]=='a']  +fname[-4:]
+    print fname, fname1
+#    if not sanitize(fname, fname1):
+#        print 'Images are not suitable for comparison. Quitting'
+#        return -1
+    print 'Images are suitable for comparison. \nChange Detection begins. . .'
+    
+    print 'Precomputing for Image1'
+    drive(fname)
+    print 'Precomputing for Image2'
+    drive(fname1)
+
+    '''Label Matching'''
+    res, tim = labelmatching(fname)
+    if 0 > res:
+        print 'Label Matching Failed'
+        return -1 
+    else:
+        print 'Label Matching completed in', tim, 'seconds. . . \n\n'
+    return 0
 
 if __name__ == "__main__":
     result=main()
