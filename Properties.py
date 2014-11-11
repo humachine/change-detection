@@ -50,6 +50,7 @@ def conv(fname):
     text=text.rstrip('\n')
     return text, conf
 
+fname=None
 import config as cfg
 def stringprops(fname=None):
 #if 1:
@@ -57,13 +58,14 @@ def stringprops(fname=None):
         fname='6_b'
         fname='15_a'
         fname='8_a'
-        fname='8_b'
         fname='6_a'
         fname='15_b'
         fname='5_a'
         fname='5_b'
+        fname='8_b'
     if cfg.IMG_EXT in fname:
         fname=fname[:-4]        
+        
     SAVE_DIR=cfg.OUT_DIR+'PGM/New/'
     strmaskhor=np.asarray(imread(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR+fname+'hor.png'), dtype=bool)
     strmaskvert=np.asarray(imread(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR+fname+'vert.png'), dtype=bool)
@@ -73,8 +75,12 @@ def stringprops(fname=None):
     '''Horizontal Strings'''
     label_im, num = ndimage.label(strmaskhor)
     slices = ndimage.find_objects(label_im)
+    centroids=ndimage.measurements.center_of_mass(strmaskhor, label_im, xrange(1, num+1))
+#    centroids = [(int(x), int(y)) for (x,y) in centroids]    
+
     confidence = []
     horstr=[]
+    centr=[]
     cnt=0
     for i, sl in enumerate(slices):
         if (np.sum(strmaskvert[sl]*strmaskhor[sl]) == np.sum(strmaskhor[sl])):
@@ -86,12 +92,15 @@ def stringprops(fname=None):
         
         cnt+=1
         confidence.append(conf)
+        centr.append(centroids[i])
         horstr.append(text)
 
     '''Vertical Strings'''        
     label_im, num = ndimage.label(strmaskvert)
     slices = ndimage.find_objects(label_im)
-
+    centroids=ndimage.measurements.center_of_mass(strmaskvert, label_im, xrange(1, num+1))
+#    centroids = [(int(x), int(y)) for (x,y) in centroids]    
+    
     vertstr=[]
     for i, sl in enumerate(slices):
         if (np.sum(strmaskvert[sl]*strmaskhor[sl]) == np.sum(strmaskvert[sl])):
@@ -99,13 +108,18 @@ def stringprops(fname=None):
         b=strmaskvert[sl]*originalimage[sl]
         b=np.lib.pad(b, (50,50), 'constant')
         imsave(SAVE_DIR+fname+ str(cnt) + '.png', np.rot90(b,-1))
+
         text, conf = conv(SAVE_DIR+fname+ str(cnt) + '.png')
+
         confidence.append(conf)
         vertstr.append(text)
+        centr.append(centroids[i])
         cnt+=1
+        
     print 'OCR completed with a percentage confidence of', np.mean(confidence)
     
+    picklethis(centr,  SAVE_DIR + fname + 'centroids.pkl')
     picklethis(horstr, SAVE_DIR + fname + 'hor.pkl')
     picklethis(vertstr, SAVE_DIR + fname + 'vert.pkl')
 
-stringprops('6_b.png')
+stringprops('6_a.png')

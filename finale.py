@@ -55,6 +55,8 @@ class compstring:
     def __repr__(self):
         return repr(self.direction)
 
+import os
+os.chdir('../../')
 
 def centroid(ccdict, j):
 #    print ccdict[j]
@@ -109,8 +111,7 @@ def process(string):
     return string
 
 
-
- def finale(fname=None):
+def finale(fname=None):
     if fname==None:
         fname='6_b'
         fname='15_b'
