@@ -46,7 +46,7 @@ def removelines(fname=None):
         fname=fname[:-4]
         
     print 'Removing labeling lines(Stage 1) for', fname
-    fill2=np.asarray(imread(cfg.removelines.FILL_IMG_DIR+fname + cfg.removelines.FILL_IMG_NAME + cfg.IMG_EXT), dtype=bool)
+    fill2=np.asarray(imread(cfg.OUT_DIR+cfg.thinning.THINNING_DIR + fname + cfg.removelines.FILL_IMG_NAME + cfg.IMG_EXT), dtype=bool)
 
 
     ans=ndimage.morphology.distance_transform_cdt(fill2, metric='chessboard')    

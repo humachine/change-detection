@@ -22,7 +22,7 @@ start_time = time.time()
 def drive(fname):
     '''Text Extraction'''
     res, tim = textextraction(fname)
-    res,tim=1,0
+#    res,tim=1,0
     if 0 > res:
         print 'Text Extraction Failed'
         return -1 
@@ -31,7 +31,7 @@ def drive(fname):
 
     '''Stringify Textual Components'''
     res, tim = stringify(fname)
-    res,tim=1,0
+#    res,tim=1,0
     if 0 > res:
         print 'Stringify Text Failed'
         return -1 
@@ -66,7 +66,6 @@ def drive(fname):
         return -1 
     else:
         print 'Image segmentation completed in', tim, 'seconds. . . \n\n'
-    return 0
 
 
     '''Attaching Labels to Segments'''
@@ -77,7 +76,6 @@ def drive(fname):
         return -1 
     else:
         print 'Attaching labels to segments completed in', tim, 'seconds. . . \n\n'
-    return 0
 
 
     '''Calculating String Properties'''
@@ -96,20 +94,28 @@ def main():
     print 'Preparing Environment. . .'
     setup()
     
-    fname='5_a.png'
+    
+    '''ENTER IMAGE1 NAME HERE.  
+    To iteratively run through various image pairs:
+    - Rename main to foo(fname)
+    - Create a new main function 
+    - Call foo(fname) inside a loop'''
+    
+    fname='14_a.png'
     
     '''Sanitization'''    
     fname1=fname
     fname1=fname[:-5]+ ['a','b'][fname[-5]=='a']  +fname[-4:]
     print fname, fname1
-#    if not sanitize(fname, fname1):
-#        print 'Images are not suitable for comparison. Quitting'
-#        return -1
+    if not sanitize(fname, fname1):
+        print 'Images are not suitable for comparison. Quitting'
+        return -1
     print 'Images are suitable for comparison. \nChange Detection begins. . .'
     
-    print 'Precomputing for Image1'
+    print
+    print 'Precomputing for Image 1'
     drive(fname)
-    print 'Precomputing for Image2'
+    print 'Precomputing for Image 2'
     drive(fname1)
 
     '''Label Matching'''

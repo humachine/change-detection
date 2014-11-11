@@ -37,7 +37,7 @@ class thinning:
     THINNING_DIR='Thinning/'
 
 class removelines:
-    FILL_IMG_DIR='RemoveLines/'
+#    FILL_IMG_DIR='RemoveLines/'
 #    FILL_IMG_DIR='../../Outputs/Restart/'
     FILL_IMG_NAME='tempfill'
     '''Below constants are empirical. Play around as is necessary'''

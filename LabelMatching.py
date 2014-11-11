@@ -24,6 +24,7 @@ import numpy as np
 from scipy.misc import imread, imsave, imshow, toimage
 from scipy import ndimage
 from scipy.spatial import distance
+import time
 
 import tesseract
 import config as cfg
@@ -41,12 +42,13 @@ def process(string):
     return string
 
 def labelmatching(fname=None):
+    starttime=time.time()
     if cfg.IMG_EXT in fname:
         fname=fname[:-4]        
     fname1=fname[:-1]+'a'        
     fname2=fname[:-1]+'b'        
         
-    SAVE_DIR=cfg.OUT_DIR+'PGM/New/'
+    SAVE_DIR=cfg.OUT_DIR+cfg.properties.OUT_DIR
 
     '''Loading previously saved images and arrays
     '''
@@ -111,3 +113,4 @@ def labelmatching(fname=None):
     imsave(cfg.OUT_DIR+cfg.RES_DIR+fname1+cfg.IMG_EXT, np.invert(resa))    
     imsave(cfg.OUT_DIR+cfg.RES_DIR+fname2+cfg.IMG_EXT, np.invert(resb))    
     
+    return 0, time.time()-starttime

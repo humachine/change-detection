@@ -74,4 +74,4 @@ def segmentation(fname=None):
         imsave(cfg.OUT_DIR + cfg.segmentation.OUT_DIR + fname + 'segmask.png', fillcopy)
         imsave(cfg.OUT_DIR + cfg.segmentation.DEBUG_DIR + fname+'forchecking.png', np.logical_xor(fillcopy, original))
         
-        return 0, time.time()-starttime
+    return 0, time.time()-starttime
