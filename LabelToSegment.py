@@ -156,13 +156,13 @@ def labeltosegment(fname):
         a,b=i
         actualsegments.append(farr[a,b])
         
-    if fnum != noofsegments:
-        print 'Number of segments calculated incorrectly. . '
-        return -1, time.time()-starttime
-
     imsave(cfg.OUT_DIR + cfg.labeltosegment.OUT_DIR + fname + 'withtext.png', final)
     imsave(cfg.OUT_DIR + cfg.labeltosegment.OUT_DIR + fname + 'check.png', horvertslant)
     imsave(cfg.OUT_DIR + cfg.labeltosegment.OUT_DIR + fname + '.png', ansans)
     
+    if fnum != noofsegments:
+        print 'Number of segments calculated incorrectly. . '
+        return -1, time.time()-starttime
+
     return 0, time.time()-starttime
     
