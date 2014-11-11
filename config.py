@@ -7,7 +7,7 @@ import os
 import numpy as np
 
 IMG_DIR = '../../images_consolidated/'
-OUT_DIR = 'Outs1/'
+OUT_DIR = 'Outs/'
 IMG_EXT = '.png'
 
 class sanitize:

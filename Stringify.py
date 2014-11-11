@@ -143,6 +143,7 @@ def stringify(fname=None, kvs=[]):
     hlist.append(component(height-4, width-4, height-3, width-3, 0))
     hlist[-1].direction='h'
     
+    
     #==============================================================================
     #  STRINGING BEGINS
     #==============================================================================
@@ -222,6 +223,8 @@ def stringify(fname=None, kvs=[]):
     if save==False:
         show(xor(finals+finalans, imgoriginal))
     else:
+        imsave(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR+fname+'vert'+'.png',finals)
+        imsave(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR+fname+'hor'+'.png',finalans)
         imsave(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR + fname+'strmask'+'.png',(finals+finalans))
         imsave(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR+fname+'strmaskdil'+'.png',dilans)
         imsave(cfg.OUT_DIR+cfg.stringify.STRINGIFY_DIR+fname+'check'+'.png',xor(finals+finalans, imgoriginal))
@@ -232,3 +235,5 @@ def stringify(fname=None, kvs=[]):
         a.close()
 
     return 0, time.time() - starttime
+
+stringify('5_a.png')

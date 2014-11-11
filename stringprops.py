@@ -12,21 +12,21 @@ LIST1 - VERTLIST
 LIST2 - HORLIST
 @author: ipcv5
 """
-import numpy as np
-from operator import itemgetter, attrgetter
-import pytesser
-import pickle
+#import pytesser
+
 from PIL import Image	
-import cv2
+from operator import itemgetter, attrgetter
 import mylib
-from mylib import pickleload, picklethis, show
+from mylib import pickleload, picklethis, show, pickle
 import numpy as np
 from scipy.misc import imread, imsave, imshow, toimage
-from binlabeller import bwlabel
 from scipy import ndimage
-import time
-from binlabeller import bwlabel
-starttime = time.time() 
+#import time
+#from binlabeller import bwlabel
+#starttime = time.time() 
+
+import os
+os.chdir('../../')
 
 class component:
     def __init__(self, ul0, ul1, lr0, lr1, ccdictno, width=None, height=None, direction=None, top=None, bottom=None):
@@ -56,8 +56,26 @@ class compstring:
     def __repr__(self):
         return repr(self.direction)
 
+import cv2.cv as cv
+import tesseract
 
-def stringprops(fname=None):
+api = tesseract.TessBaseAPI()
+api.Init(".","eng",tesseract.OEM_DEFAULT)
+api.SetPageSegMode(tesseract.PSM_SINGLE_WORD)
+
+def conv(fname):
+    image=cv.LoadImage(fname+'.png', cv.CV_LOAD_IMAGE_GRAYSCALE)
+    #api.SetPageSegMode(tesseract.PSM_SINGLE_WORD)
+    tesseract.SetCvImage(image,api)
+    text=api.GetUTF8Text()
+    conf=api.MeanTextConf()
+    image=None
+#    print text
+    print text.rstrip('\n')
+    
+#def stringprops(fname=None):
+if 1:
+    fname=None
     if fname==None:
         fname='6_b'
         fname='15_a'
@@ -71,7 +89,6 @@ def stringprops(fname=None):
   
     imname = 'Outputs\\labelinglinesremoved'+fname+'.png'
     
-    ccnum=pickleload('Outputs\\ccnum'+fname+'.pkl')
     ccdict=pickleload('Outputs\\ccdict'+fname+'.pkl')
     textcomplist=pickleload('Outputs\\textcomplist'+fname+'.pkl')
     img1=np.asarray(imread(imname), dtype=bool)
@@ -135,8 +152,9 @@ def stringprops(fname=None):
     
     work=np.zeros((500,500), dtype=bool)
     counter=0
+    intt=0
     for i in list2:
-    #    work=np.zeros((60,60), dtype=bool)
+        print 'list'        
         j=i[0]
         j1=i[-1]
         
@@ -146,20 +164,21 @@ def stringprops(fname=None):
         lr0=max(hlist[j].lr0, hlist[j1].lr0)
         lr1=hlist[j1].lr1
     
-    #    b=(originalimage[ul0-5:lr0+5, ul1-5:lr1+5])
-    #
         b=(originalimage[ul0-5:lr0+5, ul1-5:lr1+5])
         b=np.flipud(originalimage[ul0-5:lr0+5, ul1-5:lr1+5])
         b=np.fliplr(b)
     
-        im = Image.fromarray(np.uint8((b)*255))
-        try:
-            textstring=pytesser.image_to_string(im)
-        except SystemError:
-            textstring=''
+        b=np.lib.pad(b, (50,50), 'constant')
+        imsave('OCR/'+fname+str(intt)+'.png', np.uint8((b)*255))
+#        im = Image.fromarray(np.uint8((b)*255))
+#        im.save('OCR/'+str(intt)+'.png')        
+        text='ha'    
+        
+#        conv('OCR/'+str(intt))        
+        intt+=1
+        print text
+        textstring=text
         print textstring
-    
-    
         
         work=(originalimage[ul0-5:lr0+5, ul1-5:lr1+5]).copy()
         work=ndimage.binary_dilation(work)
@@ -198,11 +217,13 @@ def stringprops(fname=None):
         b=np.transpose(b)
         b=np.fliplr(b)
     
+        b=np.lib.pad(b, (50,50), 'constant')
         im = Image.fromarray(np.uint8((b)*255))
-        try:
-            textstring=pytesser.image_to_string(im)
-        except SystemError:
-            textstring=''
+        im.save('OCR/'+str(intt)+'.png')        
+#        conv('OCR/'+str(intt))
+
+        intt+=1
+        textstring=''
         print textstring
     
     
@@ -228,34 +249,7 @@ def stringprops(fname=None):
         stringlist[counter].append(textstring)
         counter+=1
     
-    #for i in strlist:
-        
         
     mylib.picklethis(stringlist, 'Outputs\\strprops'+fname)    
     mylib.picklethis(stringlist1, 'Outputs\\strprops1'+fname)    
     print len(stringlist1), len(stringlist)
-
-#    show(work)
-#    show(work)
-
-#fname='15_a'
-#f(fname)
-#fname='8_a'
-#f(fname)
-#fname='8_b'
-#f(fname)
-#fname='5_b'
-#f(fname)
-#fname='5_a'
-#f(fname)
-#fname='6_a'
-#f(fname)
-#fname='15_b'
-#f(fname)
-#fname='6_b'
-#f(fname)
-#
-   
-if __name__ == "__main__":
-    stringprops('4_7_b') 
-    print time.time() - starttime, "seconds"
