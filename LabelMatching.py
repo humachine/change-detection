@@ -41,6 +41,7 @@ def process(string):
     string=string.replace('\xe2\x80\x94', '-')
     return string
 
+
 def labelmatching(fname=None):
     starttime=time.time()
     if cfg.IMG_EXT in fname:
@@ -114,3 +115,4 @@ def labelmatching(fname=None):
     imsave(cfg.OUT_DIR+cfg.RES_DIR+fname2+cfg.IMG_EXT, np.invert(resb))    
     
     return 0, time.time()-starttime
+    

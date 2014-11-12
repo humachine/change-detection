@@ -20,12 +20,6 @@ print os.getcwd()
 
 SAVE_DIR='Outs/PGM/'
 
-
-def padwithtens(vector, pad_width, iaxis, kwargs):
-    vector[:pad_width[0]] = 10
-    vector[-pad_width[1]:] = 10
-    return vector
-#>>> np.lib.pad(a, 2, padwithtens)
 fname='5_a.png'
 if 1:
 #def siftdrive(fname):
@@ -41,6 +35,11 @@ if 1:
 
     SIG=3    
     
+	'''The following piece of code takes the segment mask of an image. 
+	It then saves each segment to a PGM file and tries to match it using SIFT
+	The images are first blurred using a Gaussian filter and then scaled down to make it suitable for SIFT.
+	'''
+	
     label_im, num = ndimage.label(im1)
     slices = ndimage.find_objects(label_im)
     for i, slc in enumerate(slices):
@@ -68,6 +67,7 @@ if 1:
         ratio=arr.shape[0]/400
         arr=imresize(arr, (400, int(arr.shape[1]/ratio)))
         imsave(SAVE_DIR + fname2 + str(i+1) + '.png', arr)
+                
                 
         
         conv = Image.open(SAVE_DIR + fname2 + str(i+1) + '.png')
