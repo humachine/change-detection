@@ -127,4 +127,3 @@ def stringproperties(fname=None):
     picklethis(vertstr, SAVE_DIR + fname + 'vert.pkl')
     
     return 0, time.time()-starttime
-stringproperties('5_a.png')
