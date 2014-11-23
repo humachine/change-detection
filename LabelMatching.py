@@ -37,12 +37,19 @@ def process(string):
     string=string.replace('0','O')
     string=string.replace('Z','2')
     string=string.replace(':|:', 'i')   
+    string=string.replace(':I:', 'i')   
+
+    string=string.replace('j:', 'i')   
     string=string.replace('|', '1')
+    string=string.replace('I', '1')
+    string=string.replace('l', '1')
+    string=string.replace('_', '.')
+    string=string.replace('H:', '7i')
     string=string.replace('\xe2\x80\x94', '-')
     return string
-
-
-def labelmatching(fname=None):
+fname='8_a.png'
+if 1:
+#def labelmatching(fname=None):
     starttime=time.time()
     if cfg.IMG_EXT in fname:
         fname=fname[:-4]        
@@ -76,15 +83,24 @@ def labelmatching(fname=None):
     vertstrb=pickleload(SAVE_DIR + fname2 + 'vert.pkl')
     textb=horstrb+vertstrb
 
-    texta=[process(i) for i in texta]
-    textb=[process(i) for i in textb]
+    tina=texta
+    tinb=textb
+    
+    print texta
+    print textb
 
+#    texta=[process(i) for i in texta]
+#    textb=[process(i) for i in textb]
+    
     for x in range(len(texta)):
         for y in range(len(textb)):
             p=texta[x]
             q=textb[y]
             
-            if p!=q:
+#            print p, 'is', q
+            
+            if p!=q and p!=process(q) and q!=process(p) and process(q)!=process(p):            
+#            if p!=q:
                 continue
 
             sel=y            
@@ -100,10 +116,20 @@ def labelmatching(fname=None):
     diffb=[x for x in textb if x!='']
     print 'Number of changes in Image 1: ', len(diffa)
     print 'Number of changes in Image 2: ', len(diffb)
+
+    PADDING=2
+    THICKNESS=3    
     
     resa=originalimagea*np.invert(strmaskhora)*np.invert(strmaskverta)
+    resa1=originalimagea.copy()
     for x in range(len(texta)):
         if texta[x]!='':
+            sll=slia[x]
+            resa1=resa
+            resa1[sll[0].start-PADDING, sll[1].start-PADDING:sll[1].stop+PADDING]=True
+            resa1[sll[0].stop+PADDING, sll[1].start-PADDING:sll[1].stop+PADDING]=True
+            resa1[sll[0].start-PADDING:sll[0].stop+PADDING, sll[1].start-PADDING]=True
+            resa1[sll[0].start-PADDING:sll[0].stop+PADDING, sll[1].stop+PADDING]=True
             resa[slia[x]]=originalimagea[slia[x]]
 
     resb=originalimageb*np.invert(strmaskhorb)*np.invert(strmaskvertb)
@@ -114,5 +140,7 @@ def labelmatching(fname=None):
     imsave(cfg.OUT_DIR+cfg.RES_DIR+fname1+cfg.IMG_EXT, np.invert(resa))    
     imsave(cfg.OUT_DIR+cfg.RES_DIR+fname2+cfg.IMG_EXT, np.invert(resb))    
     
-    return 0, time.time()-starttime
-    
+    print texta
+    print textb
+#    return 0, time.time()-starttime
+#labelmatching('5_a.png')

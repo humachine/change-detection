@@ -127,4 +127,9 @@ def stringproperties(fname=None):
     picklethis(vertstr, SAVE_DIR + fname + 'vert.pkl')
     
     return 0, time.time()-starttime
-stringproperties('5_a.png')
+
+import os
+l=os.listdir('images_consolidated')
+for i,j in enumerate(l):
+    print i, j
+    stringproperties(j)

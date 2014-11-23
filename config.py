@@ -29,7 +29,7 @@ class stringify:
     STRINGIFY_DIR='GetStrings/'
     DILMASK=30
     TOLERANCE= 16
-    GAP=52
+    GAP=60
     TOL=0
 
 class thinning:
