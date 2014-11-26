@@ -71,3 +71,4 @@ class properties:
 class labelmatching:
     THICKNESS=3
     PADDING=2
+    TIF_ON=False
