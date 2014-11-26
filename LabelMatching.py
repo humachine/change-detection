@@ -46,8 +46,12 @@ def process(string):
     string=string.replace('_', '.')
     string=string.replace('H:', '7i')
     string=string.replace('\xe2\x80\x94', '-')
+    string=string.replace(':E', 'i')   
+    string=string.replace('\xe2\x80\x98', 'T')
+    string=string.replace('"', '7')
     return string
-fname='8_a.png'
+
+fname='6_a.png'
 if 1:
 #def labelmatching(fname=None):
     starttime=time.time()
@@ -83,12 +87,6 @@ if 1:
     vertstrb=pickleload(SAVE_DIR + fname2 + 'vert.pkl')
     textb=horstrb+vertstrb
 
-    tina=texta
-    tinb=textb
-    
-    print texta
-    print textb
-
 #    texta=[process(i) for i in texta]
 #    textb=[process(i) for i in textb]
     
@@ -96,8 +94,6 @@ if 1:
         for y in range(len(textb)):
             p=texta[x]
             q=textb[y]
-            
-#            print p, 'is', q
             
             if p!=q and p!=process(q) and q!=process(p) and process(q)!=process(p):            
 #            if p!=q:
@@ -117,29 +113,65 @@ if 1:
     print 'Number of changes in Image 1: ', len(diffa)
     print 'Number of changes in Image 2: ', len(diffb)
 
-    PADDING=2
-    THICKNESS=3    
+    PADDING=cfg.labelmatching.PADDING
+    THICKNESS=cfg.labelmatching.THICKNESS 
     
-    resa=originalimagea*np.invert(strmaskhora)*np.invert(strmaskverta)
+#    resa=originalimagea*np.invert(strmaskhora)*np.invert(strmaskverta)
+    resa=np.zeros((originalimagea.shape), dtype=bool)
     resa1=originalimagea.copy()
     for x in range(len(texta)):
         if texta[x]!='':
             sll=slia[x]
-            resa1=resa
-            resa1[sll[0].start-PADDING, sll[1].start-PADDING:sll[1].stop+PADDING]=True
-            resa1[sll[0].stop+PADDING, sll[1].start-PADDING:sll[1].stop+PADDING]=True
-            resa1[sll[0].start-PADDING:sll[0].stop+PADDING, sll[1].start-PADDING]=True
-            resa1[sll[0].start-PADDING:sll[0].stop+PADDING, sll[1].stop+PADDING]=True
+            resa[sll[0].start-PADDING-2*THICKNESS: sll[0].start-PADDING,  sll[1].start-PADDING-2*THICKNESS:sll[1].stop+PADDING+2*THICKNESS]=True
+            resa[sll[0].stop +PADDING: sll[0].stop +PADDING+2*THICKNESS,  sll[1].start-PADDING-2*THICKNESS:sll[1].stop+PADDING+2*THICKNESS]=True
+            resa[sll[0].start-PADDING-2*THICKNESS:sll[0].stop+PADDING+2*THICKNESS, sll[1].start-PADDING-2*THICKNESS:sll[1].start-PADDING]=True
+            resa[sll[0].start-PADDING-2*THICKNESS:sll[0].stop+PADDING+2*THICKNESS, sll[1].stop+PADDING:sll[1].stop+PADDING+2*THICKNESS]=True
             resa[slia[x]]=originalimagea[slia[x]]
+    resa1[:]=resa[:]
+    resa=np.logical_or(originalimagea*np.invert(strmaskhora)*np.invert(strmaskverta), resa)
 
-    resb=originalimageb*np.invert(strmaskhorb)*np.invert(strmaskvertb)
+    a=originalimagea.copy()
+    a=np.invert(a)
+    a=a.astype(np.uint8)
+    a*=255
+    b=a.copy()
+    c=a.copy()
+    b[resa1>0]=0
+    c[resa1>0]=0
+    imsave(cfg.OUT_DIR+cfg.RES_DIR+fname1+'colourized'+cfg.IMG_EXT, np.dstack((a,b,c)))    
+    
+    
+    resb=np.zeros((originalimageb.shape), dtype=bool)
+    resb1=originalimageb.copy()
     for x in range(len(textb)):
         if textb[x]!='':
-            resb[slib[x]]=originalimageb[slib[x]]
+            sll=slib[x]
+            resb[sll[0].start-PADDING-2*THICKNESS: sll[0].start-PADDING,  sll[1].start-PADDING-2*THICKNESS:sll[1].stop+PADDING+2*THICKNESS]=True
+            resb[sll[0].stop +PADDING: sll[0].stop +PADDING+2*THICKNESS,  sll[1].start-PADDING-2*THICKNESS:sll[1].stop+PADDING+2*THICKNESS]=True
+            resb[sll[0].start-PADDING-2*THICKNESS:sll[0].stop+PADDING+2*THICKNESS, sll[1].start-PADDING-2*THICKNESS:sll[1].start-PADDING]=True
+            resb[sll[0].start-PADDING-2*THICKNESS:sll[0].stop+PADDING+2*THICKNESS, sll[1].stop+PADDING:sll[1].stop+PADDING+2*THICKNESS]=True
+            resb[slib[x]]=originalimagea[slib[x]]
+    resb1[:]=resb[:]
+    resb=np.logical_or(originalimageb*np.invert(strmaskhorb)*np.invert(strmaskvertb), resb)
+
+    a=originalimageb.copy()
+    a=np.invert(a)
+    a=a.astype(np.uint8)
+    a*=255
+    b=a.copy()
+    c=a.copy()
+    b[resa1>0]=0
+    c[resa1>0]=0
+    imsave(cfg.OUT_DIR+cfg.RES_DIR+fname2+'colourized'+cfg.IMG_EXT, np.dstack((a,b,c)))    
+
+
 
     imsave(cfg.OUT_DIR+cfg.RES_DIR+fname1+cfg.IMG_EXT, np.invert(resa))    
     imsave(cfg.OUT_DIR+cfg.RES_DIR+fname2+cfg.IMG_EXT, np.invert(resb))    
     
+    texta=[process(i) for i in texta]
+    textb=[process(i) for i in textb]
+
     print texta
     print textb
 #    return 0, time.time()-starttime

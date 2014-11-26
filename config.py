@@ -67,3 +67,7 @@ class labeltosegment:
     
 class properties:
     OUT_DIR='StringProperties/'
+
+class labelmatching:
+    THICKNESS=3
+    PADDING=2
