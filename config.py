@@ -6,7 +6,7 @@ import sys
 import os
 import numpy as np
 
-IMG_DIR = '../../images_consolidated/'
+IMG_DIR = 'images_consolidated/'
 OUT_DIR = 'Outs1/'
 IMG_EXT = '.png'
 RES_DIR = 'Results/'

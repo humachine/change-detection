@@ -10,10 +10,11 @@ from Thinning import thinning
 from RemoveLines import removelines
 from Segmentation import segmentation
 from LabelToSegment import labeltosegment
-from StringProperties import stringproperties
-from LabelMatching import labelmatching
+#from StringProperties import stringproperties
+#from LabelMatching import labelmatching
 
 import time
+import os
 import config as cfg
 
 start_time = time.time()
@@ -78,21 +79,31 @@ def drive(fname):
         print 'Attaching labels to segments completed in', tim, 'seconds. . . \n\n'
 
 
-    '''Calculating String Properties'''
-    res, tim = stringproperties(fname)
-#    res,tim=1,0
-    if 0 > res:
-        print 'OCR Failed'
-        return -1 
-    else:
-        print 'OCR Engine recognition completed in', tim, 'seconds. . . \n\n'
-    return 0
-
+#    '''Calculating String Properties'''
+#    res, tim = stringproperties(fname)
+##    res,tim=1,0
+#    if 0 > res:
+#        print 'OCR Failed'
+#        return -1 
+#    else:
+#        print 'OCR Engine recognition completed in', tim, 'seconds. . . \n\n'
+#    return 0
 
 def main():
+    setup()
+    l=os.listdir(cfg.IMG_DIR)
+    l=[x for x in l if 'a' in x]
+    print l
+    
+    for i in l:
+        main1(i)
+    return 0
+    
+    
+
+def main1(fname):
     print 'Creating Directories. . .'
     print 'Preparing Environment. . .'
-    setup()
     
     
     '''ENTER IMAGE1 NAME HERE.  
@@ -101,7 +112,7 @@ def main():
     - Create a new main function 
     - Call foo(fname) inside a loop'''
     
-    fname='14_a.png'
+#    fname='14_a.png'
     
     '''Sanitization'''    
     fname1=fname
@@ -118,13 +129,13 @@ def main():
     print 'Precomputing for Image 2'
     drive(fname1)
 
-    '''Label Matching'''
-    res, tim = labelmatching(fname)
-    if 0 > res:
-        print 'Label Matching Failed'
-        return -1 
-    else:
-        print 'Label Matching completed in', tim, 'seconds. . . \n\n'
+#    '''Label Matching'''
+#    res, tim = labelmatching(fname)
+#    if 0 > res:
+#        print 'Label Matching Failed'
+#        return -1 
+#    else:
+#        print 'Label Matching completed in', tim, 'seconds. . . \n\n'
     return 0
 
 if __name__ == "__main__":
