@@ -218,8 +218,8 @@ def labelmatching(fname=None):
     a*=255
     b=a.copy()
     c=a.copy()
-    b[resa1>0]=0
-    c[resa1>0]=0
+    b[resb1>0]=0
+    c[resb1>0]=0
     imsave(cfg.OUT_DIR+cfg.RES_DIR+fname2+'colourized'+cfg.IMG_EXT, np.dstack((a,b,c)))    
 
 
