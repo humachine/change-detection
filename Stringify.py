@@ -236,3 +236,7 @@ def stringify(fname=None, kvs=[]):
 
     return 0, time.time() - starttime
 
+import os
+l=os.listdir(cfg.IMG_DIR)
+for i in l:
+    stringify(i)

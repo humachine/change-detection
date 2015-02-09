@@ -6,7 +6,7 @@ import sys
 import os
 import numpy as np
 
-IMG_DIR = '../../images_consolidated/'
+IMG_DIR = 'images_consolidated/'
 OUT_DIR = 'Outs1/'
 IMG_EXT = '.png'
 RES_DIR = 'Results/'
@@ -29,7 +29,7 @@ class stringify:
     STRINGIFY_DIR='GetStrings/'
     DILMASK=30
     TOLERANCE= 16
-    GAP=52
+    GAP=60
     TOL=0
 
 class thinning:
@@ -67,3 +67,8 @@ class labeltosegment:
     
 class properties:
     OUT_DIR='StringProperties/'
+
+class labelmatching:
+    THICKNESS=3
+    PADDING=2
+    TIF_ON=False
