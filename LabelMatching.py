@@ -198,7 +198,7 @@ def labelmatching(fname=None):
             resb[sll[0].stop +PADDING: sll[0].stop +PADDING+2*THICKNESS,  sll[1].start-PADDING-2*THICKNESS:sll[1].stop+PADDING+2*THICKNESS]=True
             resb[sll[0].start-PADDING-2*THICKNESS:sll[0].stop+PADDING+2*THICKNESS, sll[1].start-PADDING-2*THICKNESS:sll[1].start-PADDING]=True
             resb[sll[0].start-PADDING-2*THICKNESS:sll[0].stop+PADDING+2*THICKNESS, sll[1].stop+PADDING:sll[1].stop+PADDING+2*THICKNESS]=True
-            resb[slib[x]]=originalimagea[slib[x]]
+            resb[slib[x]]=originalimageb[slib[x]]
 
             divbl=int(centb[x][0]*divl/length)
             divbw=int(centb[x][1]*divw/width)
