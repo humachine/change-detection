@@ -27,12 +27,12 @@ from scipy.spatial import distance
 import time
 from tifffile import TiffFile
 
-import tesseract
+#import tesseract
 import config as cfg
 
-api = tesseract.TessBaseAPI()
-api.Init(".","eng",tesseract.OEM_DEFAULT)
-api.SetPageSegMode(tesseract.PSM_SINGLE_WORD)
+#api = tesseract.TessBaseAPI()
+#api.Init(".","eng",tesseract.OEM_DEFAULT)
+#api.SetPageSegMode(tesseract.PSM_SINGLE_WORD)
 
 def findpagesize(path_to_file):    
     print path_to_file
@@ -75,9 +75,9 @@ def process(string):
     string=string.replace('"', '7')
     return string
 
-#fname='6_a.png'
-#if 1:
-def labelmatching(fname=None):
+fname='8_a.png'
+if 1:
+#def labelmatching(fname=None):
     starttime=time.time()
     if cfg.IMG_EXT in fname:
         fname=fname[:-4]        
@@ -121,7 +121,6 @@ def labelmatching(fname=None):
     '''
     Comparing labels and label matching
     '''    
-    
     for x in range(len(texta)):
         for y in range(len(textb)):
             p=texta[x]
@@ -176,6 +175,7 @@ def labelmatching(fname=None):
     '''
     Colorizing Output for A
     '''
+    print 'Colourizing Output for Image A'
     a=originalimagea.copy()
     a=np.invert(a)
     a=a.astype(np.uint8)
@@ -212,6 +212,7 @@ def labelmatching(fname=None):
     '''
     Colorizing Output for B
     '''
+    print 'Colourizing Output for Image B'
     a=originalimageb.copy()
     a=np.invert(a)
     a=a.astype(np.uint8)
@@ -231,5 +232,5 @@ def labelmatching(fname=None):
 
 #    print texta
 #    print textb
-    return 0, time.time()-starttime
-labelmatching('5_a.png')
+#    return 0, time.time()-starttime
+#labelmatching('5_a.png')

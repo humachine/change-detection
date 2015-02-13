@@ -9,7 +9,7 @@ import numpy as np
 IMG_DIR = 'images_consolidated/'
 OUT_DIR = 'Outs1/'
 IMG_EXT = '.png'
-RES_DIR = 'Results/'
+RES_DIR = 'Results1/'
 
 class sanitize:
     DENS_LOW=0.4
