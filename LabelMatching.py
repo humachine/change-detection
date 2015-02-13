@@ -26,6 +26,7 @@ from scipy import ndimage
 from scipy.spatial import distance
 import time
 from tifffile import TiffFile
+from operator import itemgetter
 
 #import tesseract
 import config as cfg
@@ -75,7 +76,7 @@ def process(string):
     string=string.replace('"', '7')
     return string
 
-fname='8_a.png'
+fname='10_a.png'
 if 1:
 #def labelmatching(fname=None):
     starttime=time.time()
@@ -131,11 +132,13 @@ if 1:
                 continue
 
             sel=y            
-            mindist=distance.euclidean(centa[x], centb[y])
-            for z in range(y, len(textb)):
-                if texta[x] == textb[z]:
-                    if distance.euclidean(centa[x], centb[z]) < mindist:
-                        sel=z
+            d=[distance.euclidean(centa[x], centb[z]) for z in range(y, len(textb)) if(texta[x] == textb[z])]
+            
+            if not d:
+                sel=y
+            else:
+                sel=y+min(enumerate(d), key=itemgetter(1))[0] 
+
             texta[x]=''
             textb[sel]=''
     
